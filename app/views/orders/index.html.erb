@@ -1,0 +1,70 @@
+<h1>Listing orders</h1>
+
+<%= link_to 'New Order', new_order_path %>
+<table>
+  <thead>
+    <tr>
+      <th>Price</th>
+      <th>Name</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @orders.each do |order| %>
+      <tr>
+        <td><%= order.price %></td>
+        <td><%= order.name %></td>
+        <td><%= link_to 'Show', order %></td>
+        <td><%= link_to 'Edit', edit_order_path(order) %></td>
+        <td><%= link_to 'Destroy', order, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+
+ <% payment_service_for Order.new, '8142_c2129b1bd119123',
+                              :amount => 50.00,
+                              :currency => 'USD',
+                              :service => :knox,
+                              :html => { :id => 'payment-form' } do |service| %>
+
+
+   <% service.customer :first_name => 'Cory',
+                      :last_name => 'Logan',
+                      :phone => '(555)555-5555',
+                      :email => 'he@corylogan.com' %>
+
+   <% service.billing_address :city => 'Ottawa',
+                             :address1 => '21 Snowy Brook Lane',
+                             :address2 => 'Apt. 36',
+                             :state => 'ON',
+                             :country => 'CA',
+                             :zip => 'K1J1E5' %>
+
+   <% service.invoice '#1000' %>
+   <% service.shipping '0.00' %>
+   <% service.tax '0.00' %>
+    <%= submit_tag "Submit" %>
+
+
+   <% service.notify_url "notify_url" %>
+   <% service.return_url "http://localhost:3000?thanks=true" %>
+   <% service.cancel_return_url 'localhost:3000?cancel=true' %>
+ <% end %>
+
+
+
+
+ <h2>Parameters</h2>
+
+ <% params.each_pair do |k, v| %>
+   <br>
+   <b><%= k %></b>:
+   <%= v %>
+ <% end %>
+
+
